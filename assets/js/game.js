@@ -160,59 +160,81 @@ var fightOrSkip = function() {
     } else {
         return false;
     }
+// end of fightOrSkip function
 };
 
-// create function
+// create fight function
 var fight = function(enemy) {
 
-    //repeat and execute as long as the enemy robot is alive
-    while (enemy.health>0 && playerInfo.health>0) { 
-        // ask player if they'd like to fight or skip fighting using fightOrSkip function
-        if (fightOrSkip()) {
-            // if true, leave fight by breakingloop
-            break;
-        }
-       
-        // generate random damage value based on a player's attack power
-        var damage = randomNumber(playerInfo.attack -3, playerInfo.attack);
-
-        // remove enemy's health by subtracting the amount set in the playerInfo.attack variable
-        enemy.health = Math.max(0, enemy.health - damage);
-        console.log(playerInfo.name + " attacked " + enemy.name + ". " + enemy.name + 
-            " now has " + enemy.health + " health remaining.");
-        
-        // check enemy's health
-        if (enemy.health <= 0) {
-            window.alert(enemy.name + " has died!");
-
-            // award player money for winning
-            playerInfo.money = playerInfo.money + 20;
-
-            // leave while() loop since enemy is dead
-            break;
-        } else {
-            window.alert(enemy.name + " still has " + enemy.health + " health left.");
-        }
-        
-        // generate random damage value based on enemy's attack power
-        var damage = randomNumber(enemy.attack - 3, enemy.attack);
-
-        // remove player's health by subtracting the amount set in the enemy.attack variable
-        playerInfo.health = Math.max(0, playerInfo.health - damage);
-        console.log(enemy.name + " attacked " + playerInfo.name + ". " + playerInfo.name + 
-            " now has " + playerInfo.health + " health remaining.");
-        
-        // check player's health
-        if (playerInfo.health <= 0) {
-        window.alert(playerInfo.name + " has died!");
-        //leave while() loop if player is dead
-        break;
-        } else {
-        window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
-        }
-
-    // end of while (enemy.health>0)    
+    // keep track of who goes first using Math.random to create a sort of coin flip with 50/50 chance
+    var isPlayerTurn = true;
+    if (Math.random() > 0.5) {
+        isPlayerTurn = false;
     }
+    console.log("Player turn to attack is " + isPlayerTurn);
+    
+    //repeat and execute as long as the enemy robot is alive
+    while (enemy.health>0 && playerInfo.health>0) {
+
+        // if player attacks first
+        if (isPlayerTurn) {
+            
+            // ask player if they'd like to fight or skip fighting using fightOrSkip function
+
+            if (fightOrSkip()) {
+                // if true, leave fight by breakingloop
+                break;
+            }
+
+            // generate random damage value based on a player's attack power
+            var damage = randomNumber(playerInfo.attack -3, playerInfo.attack);
+
+            // remove enemy's health by subtracting the amount set in the playerInfo.attack variable
+            enemy.health = Math.max(0, enemy.health - damage);
+            console.log(playerInfo.name + " attacked " + enemy.name + ". " + enemy.name + 
+                " now has " + enemy.health + " health remaining.");
+
+            // check enemy's health
+            if (enemy.health <= 0) {
+                window.alert(enemy.name + " has died!");
+
+                // award player money for winning
+                playerInfo.money = playerInfo.money + 20;
+
+                // leave while() loop since enemy is dead
+                break;
+            } else {
+                window.alert(enemy.name + " still has " + enemy.health + " health left.");
+            }
+
+        // robot attacks first 
+        } else {
+
+            // generate random damage value based on enemy's attack power
+            var damage = randomNumber(enemy.attack - 3, enemy.attack);
+
+            // remove player's health by subtracting the amount set in the enemy.attack variable
+            playerInfo.health = Math.max(0, playerInfo.health - damage);
+            console.log(enemy.name + " attacked " + playerInfo.name + ". " + playerInfo.name + 
+                " now has " + playerInfo.health + " health remaining.");
+            
+            // check player's health
+            if (playerInfo.health <= 0) {
+            window.alert(playerInfo.name + " has died!");
+            //leave while() loop if player is dead
+            break;
+            } else {
+            window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
+            }
+        // end of robot's turn
+        }
+
+        // switch who attacks first for next round
+        isPlayerTurn = !isPlayerTurn;
+
+    // end of while (enemy.health>0 && playerInfo.health
+    }
+
 // end of fight function
 };
 
